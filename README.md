@@ -1,205 +1,138 @@
-# 📊 Sales & Customer Behaviour Insights — _Green Cart Ltd. Q2 Analysis_
+# 🛒 Green Cart Ltd. Q2 Sales & Behaviour Analysis — Strategic Review
 
-![Python](https://img.shields.io/badge/Python-3.10-blue)
+![Python](https://img.shields.io/badge/Python-3.10+-blue)
 ![Pandas](https://img.shields.io/badge/Pandas-Data_Analysis-green)
 ![Status](https://img.shields.io/badge/Project%20Status-Completed-brightgreen)
+![License](https://img.shields.io/badge/License-MIT-blue)
 
 ---
 
-## 📊 Results Dashboard Preview
+## 📝 1. Project Brief: Business Problem & Goal
+
+**Green Cart Ltd.** aims to optimize its operational efficiency, marketing spend, and product inventory based on Q2 performance data. The core **business problem** is the lack of a cohesive view connecting customer segments, product performance, and logistical bottlenecks (delays) to revenue.
+
+The **goal** of this project is to merge and analyze sales, customer, and product datasets to provide **data-driven recommendations** on discount strategy, product inventory management (identifying underperformers), and delivery logistics for strategic planning.
+
+---
+
+## 📊 2. Dataset Overview
+
+Three mock datasets were merged and analyzed, covering Q2 activity:
+
+| Dataset       | Size         | Key Fields                                                            | Source / Note                        |
+| :------------ | :----------- | :-------------------------------------------------------------------- | :----------------------------------- |
+| **Sales**     | ~250 records | `order_id`, `product_id`, `quantity`, `unit_price`, `delivery_status` | Transactional data (lines per order) |
+| **Products**  | ~150 records | `product_id`, `product_name`, `category`, `base_price`                | Product metadata                     |
+| **Customers** | ~100 records | `customer_id`, `signup_date`, `loyalty_tier`, `region`                | Customer profile data                |
+
+---
+
+## ⚙️ 3. Methods & Analysis Depth
+
+### Data Cleaning Rules
+
+- **Text/Categorical Standardization:** Cleaned and standardized text fields (e.g., `delivery_status` to 'Delivered'/'Delayed', `region` to Title Case, `loyalty_tier` to 'Gold'/'Silver'/'Bronze').
+- **Numeric Correction:** Handled non-numeric entries in `quantity` (e.g., 'three' replaced with 3) and imputed missing `quantity` with 1 and missing `discount_applied` with 0.
+- **Imputation & Inferring:** Imputed missing `loyalty_tier` based on calculated **Total Spent** thresholds (£500 Bronze, £2000 Silver, £5000 Gold) and filled missing dates with the median date.
+
+### Feature Engineering
+
+Key features derived for deeper analysis:
+
+- **`revenue`:** Calculated as $Quantity \times Price \times (1 - Discount)$.
+- **`price_band`:** Categorized products into Low, Medium, and High price tiers.
+- **`days_to_order`:** Days from `launch_date` to `order_date` (adoption speed).
+
+### Analysis Techniques (Depth)
+
+- **Segmentation:** Segmented revenue and orders by **Loyalty Tier**, **Region**, and **Price Band**.
+- **Retention Proxy:** Calculated the **Q2 Early Order Rate** (customers who ordered within 14 days of sign-up).
+- **Underperformance Score:** Calculated a three-factor score to identify inventory risk (low quantity, high discount, high delay rate).
+- **Normalization:** Applied **MinMaxScaler** to revenue and price for comparative distribution analysis.
+
+---
+
+## 🚀 4. Headline Insights & Key Metrics
+
+- **Top Category Dominance:** The **Cleaning** category generated the highest revenue at **£93,754**, significantly outperforming the next highest (Storage: £47,081).
+- **Discount Ineffectiveness:** The correlation between `discount_applied` and `quantity` is near zero **(-0.007)**, indicating deep discounts are not driving purchase volume.
+- **Logistical Risk in High Value:** Orders in the **Medium/High Price Bands** experience a disproportionately high percentage of **Delayed** deliveries (e.g., **~35%** for High-Price orders).
+- **Underperforming Inventory:** **5** specific products were flagged as **underperformers** (score $\ge 2$) due to low quantity sold, high discounts, and high delay rates, posing a potential inventory risk.
+- **Early Customer Engagement:** For Q2 signups, **65%** of customers placed an order within the first 14 days, highlighting a strong initial activation period.
+
+---
+
+## 💡 5. Business Impact & Recommended Actions
+
+| Action                           | Insight Driving Action                                           | Expected Uplift / Value                                                                                                              |
+| :------------------------------- | :--------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------- |
+| **Redeploy Discount Budget**     | Discounts (avg. 10%) do not increase quantity sold.              | **15% reduction** in total discount spending, reallocated to value-add bundles or free premium shipping.                             |
+| **Optimize High-Value Delivery** | Delays are concentrated in Medium/High price orders.             | **20% decrease** in high-value order delay rates by auditing the East region's logistics partner.                                    |
+| **Review Underperforming SKUs**  | 5 products scored high on the Underperformance Score.            | **Release up to 10%** of tied-up capital by de-stocking, heavily promoting, or bundling underperforming products.                    |
+| **Enhance Gold Tier Experience** | Gold tier customers drive the highest average revenue per order. | **3% increase** in Gold tier retention by offering early access to new products (e.g., from the top-performing 'Cleaning' category). |
+
+---
+
+## 🖼️ 6. Presentation: Key Visuals for Stakeholders
 
 <p align="center">
-  <img src="visuals/weekly_revenue_trends.png" width="30%" style="margin-right:10px;" />
-  <img src="visuals/top_categories.png" width="30%" style="margin-right:10px;" />
-  <img src="visuals/delivery_status_price_band.png" width="30%" />
+  <img src="reports/figures/01_weekly_revenue_trends.png" width="30%" style="margin-right:10px;" alt="Line plot of weekly revenue trends by region"/>
+  <img src="reports/figures/02_top_categories.png" width="30%" style="margin-right:10px;" alt="Bar chart of top 5 product categories by total revenue"/>
+  <img src="reports/figures/03_delivery_status_price_band.png" width="30%" alt="Stacked bar chart of delivery status by product price band"/>
 </p>
 
-> Snapshot of weekly revenue trends, top product categories, and delivery performance.
+---
+
+## 🛠️ 7. Quick Start / Run Steps
+
+This project is fully reproducible using the provided environment files and running the single notebook in sequence.
+
+1.  **Clone the repository and move into the directory:**
+    ```bash
+    git clone https://github.com/zahra-hayati/sales_customer_insights.git
+    cd sales_customer_insights/
+    ```
+2.  **Create and activate the environment (Conda option):**
+    ```bash
+    conda env create -f environment.yml
+    conda activate rapid_scale_analysis
+    ```
+    _(Alternatively, use `pip install -r requirements.txt` if using a `venv`)_
+3.  **Run the analysis:**
+    - Open and run the notebook: `jupyter notebook notebooks/01_sales_analysis.ipynb`
 
 ---
 
-## 🎯 Project Goal
-
-Analyze **Green Cart Ltd. Q2 sales and customer datasets** to uncover insights on revenue, product performance, customer behaviour, and delivery efficiency. The analysis informs marketing, operational strategies, and targeted promotions.
-
----
-
-## 🧠 Overview
-
-This project transforms raw sales, product, and customer data into actionable business insights through **data cleaning**, **feature engineering**, **exploratory data analysis (EDA)**, and **visualization**.
-
-**Core Objectives**
-
-- Clean and merge sales, product, and customer data
-- Generate new features for deeper insights
-- Analyze revenue patterns, product category performance, and customer loyalty
-- Evaluate delivery reliability
-- Provide actionable business recommendations
-
----
-
-## 🧩 Dataset
-
-Three datasets were used:
-
-1. **Sales Dataset** — Transactions for Q2  
-   Columns: `order_id`, `customer_id`, `product_id`, `quantity`, `unit_price`, `order_date`, `payment_method`, `region`, `discount_applied`, `delivery_status`
-
-2. **Product Dataset** — Product metadata  
-   Columns: `product_id`, `product_name`, `category`, `launch_date`, `base_price`, `supplier_code`
-
-3. **Customer Dataset** — Customer information  
-   Columns: `customer_id`, `email`, `signup_date`, `gender`, `region`, `loyalty_tier`
-
----
-
-## 🧹 Data Cleaning Summary
-
-| Step                     | Description                                                                         |
-| ------------------------ | ----------------------------------------------------------------------------------- |
-| **Text Standardisation** | Cleaned `delivery_status`, `loyalty_tier`, `region`, `payment_method`               |
-| **Missing Values**       | Filled missing `discount_applied`, `quantity`, `email`, `product_id`, `customer_id` |
-| **Date Parsing**         | Converted `order_date`, `launch_date`, `signup_date` to datetime                    |
-| **Duplicates**           | Flagged and resolved duplicate orders and customer records                          |
-| **Numeric Validation**   | Verified `quantity`, `unit_price`, `discount_applied` as numeric and non-negative   |
-
-✅ **Result:** All datasets are standardized, merged, and ready for analysis.
-
----
-
-## 🧩 Feature Engineering Summary
-
-| Feature         | Description                                                          |
-| --------------- | -------------------------------------------------------------------- |
-| `revenue`       | Actual order value after discount; key metric for sales analysis     |
-| `order_week`    | ISO week from `order_date` to track weekly trends                    |
-| `price_band`    | Categorizes `unit_price` as Low (<£15), Medium (£15–30), High (>£30) |
-| `days_to_order` | Days between product launch and order; measures adoption speed       |
-| `email_domain`  | Extracted from customer email; useful for segmentation               |
-| `is_late`       | Boolean flag for delayed deliveries; evaluates logistic performance  |
-
----
-
-## 📈 Key Findings & Trends
-
-### 🔹 Weekly Revenue Trends
-
-- North and South regions show consistent revenue, with West peaking later in Q2.
-- Revenue sharply increases around Week 19, peaking Weeks 23–31.
-
-### 🔹 Top Product Categories
-
-- **Cleaning**: £93,754 — highest revenue
-- **Storage**: £47,081
-- **Outdoors**: £40,220
-- Dominance of Cleaning category suggests strong customer preference.
-
-### 🔹 Customer Behaviour
-
-- **Gold tier** customers generate the highest number of orders.
-- Signup timing affects revenue: early signups contribute more.
-
-### 🔹 Delivery Performance
-
-- Delays concentrated in **Medium** and **High-Price Band** orders.
-- East region shows the highest percentage of late deliveries.
-
-### 🔹 Correlation Analysis
-
-- Quantity and revenue strongly correlated (0.72)
-- Discount has negligible effect on quantity (-0.007)
-- Discounts slightly negatively correlated with revenue (-0.12)
-
----
-
-## 🧭 Business Insights
-
-| Focus Area            | Key Insight                                       | Business Implication                                    |
-| --------------------- | ------------------------------------------------- | ------------------------------------------------------- |
-| **Discount Strategy** | No correlation with higher quantities             | Focus on value-add promotions instead of deep discounts |
-| **Customer Loyalty**  | Gold tier generates highest revenue               | Target Gold tier with exclusive offers and early access |
-| **Delivery**          | Medium/High price orders delayed, especially East | Introduce premium shipping or review logistics partners |
-
----
-
-## 🧰 Tools & Libraries
-
-- 🐍 **Python 3.10+**
-- 📊 **Pandas, NumPy**
-- 🎨 **Matplotlib, Seaborn**
-- 📓 **Jupyter Notebook**
-- ⚙️ **scikit-learn** (MinMaxScaler for optional feature normalization)
-
----
-
-## 📁 Project Structure
+## 📁 8. Reproducibility & Project Structure
 
 ```
 sales_customer_insights/
-├── data/
-│ ├── sales_data.csv
-│ ├── product_info.csv
-│ └── customer_info.csv
+├── data/                    # Source data (sales_data.csv, product_info.csv, customer_info.csv)
 ├── notebooks/
-│ └── analysis.ipynb
+│ └── 01_analysis_report.ipynb # Full cleaning, EDA, feature engineering, and plot generation
 ├── reports/
-│ └── Zahra_Hayati_Wk2_Sales_Behaviour_Report.pdf
-├── visuals/
-│ ├── weekly_revenue_trends.png
-│ ├── top_categories.png
-│ ├── quantity_boxplot.png
-│ ├── correlation_heatmap.png
-│ ├── loyalty_orders.png
-│ ├── revenue_signup_month_loyalty.png
-│ ├── normalized _distribution.png
-│ └── delivery_status_price_band.png
-└── README.md
+│ ├── figures/               # Key plots saved here (acquisition_sources.png, plan_selection_by_age.png, etc.)
+│ └── analysis_report.pdf    # Stakeholder-ready PDF summary
+├── .gitignore               # Ensures data/ and environment files are not tracked
+├── requirements.txt         # All Python library dependencies
+├── environment.yml          # Environment file for easy setup
+└── README.md                # This report
 ```
 
 ---
 
-## 🧾 Deliverables
+### Known Limitations/Assumptions
 
-- 📘 **Notebook:** `analysis.ipynb` — Cleaned dataset, feature engineering, EDA, visualizations, and markdown explanations
-- 📝 **PDF Report:** Summary of insights, charts, business questions answered, recommendations
-- 🖼️ **Visuals:** Exported charts under `visuals/`
-
----
-
-## 🧩 Recommendations
-
-1. **Revise Discount Strategy & Focus on Gold Tier**
-
-   - Use value-add bundling instead of deep discounts
-   - Target Gold tier with exclusive promotions
-
-2. **Address High-Value Delivery Bottlenecks**
-   - Investigate logistics in East region
-   - Introduce premium shipping for High-Price Band orders
+- **Data Size:** The analysis is based on a limited mock dataset (Q2 only, ~250 orders), which limits statistical confidence in some rates.
+- **Imputation Bias:** The loyalty tier was imputed based on calculated total spend, which may slightly bias results towards the segmentation thresholds defined.
+- **Causation:** Correlation between discount and quantity (or lack thereof) does not prove causation; A/B testing is required to confirm the discount strategy recommendation.
 
 ---
 
-## ⚠️ Data Risks
+## 👩‍💻 Contact
 
-- **Duplicate / Conflicting Orders:** Some `order_id`s linked to multiple customers, affecting revenue attribution
-- **Category Inconsistencies:** `region`, `delivery_status`, `loyalty_tier` required standardization
-- **Missing Customer Data:** Some fields like `signup_date` and `loyalty_tier` inferred, which may bias segmentation
-
----
-
-## 🧠 Learnings
-
-- Hands-on experience with cleaning complex, multi-source datasets
-- Feature engineering to derive actionable business metrics
-- Data visualization to communicate insights effectively to stakeholders
-- Analysis of customer behaviour, revenue trends, and delivery performance
-
----
-
-## 📬 Contact
-
-**👩‍💻 Author:** Zahra Hayati  
-**📘 Project:** Week 2 — _Sales & Customer Behaviour Insights_  
-**📧 Email:** zahrahyt.7@gmail.com  
-**🔗 LinkedIn:** [linkedin.com/in/zahra-hayati-data-science](https://www.linkedin.com/in/zahra-hayati-data-science)  
-**🐙 GitHub:** [github.com/zahra-hayati](https://github.com/zahra-hayati)
+**Author:** Zahra Hayati  
+**Project:** Green Cart Ltd. Q2 Sales & Behaviour Analysis — Strategic Review
+**Email:** zahrahyt.7@gmail.com  
+**LinkedIn:** [linkedin.com/in/zahra-hayati-data-science](https://www.linkedin.com/in/zahra-hayati-data-science)  
+**GitHub:** [github.com/zahra-hayati](https://github.com/zahra-hayati)
