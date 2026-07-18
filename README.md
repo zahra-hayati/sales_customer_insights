@@ -134,5 +134,5 @@ sales_customer_insights/
 **Author:** Zahra Hayati  
 **Project:** Green Cart Ltd. Q2 Sales & Behaviour Analysis — Strategic Review
 **Email:** zahrahyt.7@gmail.com  
-**LinkedIn:** [linkedin.com/in/zahra-hayati-data-science](https://www.linkedin.com/in/zahra-hayati-data-science)  
+**LinkedIn:** [linkedin.com/in/zahra-hayati-data-science](https://www.linkedin.com/in/zahra-hayati-full-stack)  
 **GitHub:** [github.com/zahra-hayati](https://github.com/zahra-hayati)
